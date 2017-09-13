@@ -36,6 +36,6 @@
     "rollup-plugin-replace": "^1.1.0"
   },
   "dependencies": {
-    "bmaplib.texticonoverlay": "^1.0.0"
+    "bmaplib.texticonoverlay": "^1.0.1"
   }
 }

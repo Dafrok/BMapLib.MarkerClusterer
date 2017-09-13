@@ -860,6 +860,9 @@ var index$1 = __commonjs(function (module, exports, global) {
     *@return 无返回值。
     */
     TextIconOverlay.prototype._updateCss = function(){
+        if (!this._domElement) {
+            return
+        }
         var style = this.getStyleByText(this._text, this._styles);
         this._domElement.style.cssText = this._buildCssText(style);
     };
