@@ -562,7 +562,7 @@ Cluster.prototype.updateClusterMarker = function () {
 
     var thatMap = this._map;
     var thatBounds = this.getBounds();
-    this._clusterMarker.addEventListener("click", function(event){
+    this._clusterMarker.addEventListener && this._clusterMarker.addEventListener("click", function(event){
         thatMap.setViewport(thatBounds);
     });
 
