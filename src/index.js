@@ -143,6 +143,9 @@ var MarkerClusterer  = function(map, options){
  * @return 无返回值。
  */
 MarkerClusterer.prototype.addMarkers = function(markers){
+    if (!markers.length) {
+        return
+    }
     for(var i = 0, len = markers.length; i <len ; i++){
         this._pushMarkerTo(markers[i]);
     }
