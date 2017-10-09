@@ -143,6 +143,9 @@ var MarkerClusterer  = function(map, options){
  * @return 无返回值。
  */
 MarkerClusterer.prototype.addMarkers = function(markers){
+    if (!markers.length) {
+        return
+    }
     for(var i = 0, len = markers.length; i <len ; i++){
         this._pushMarkerTo(markers[i]);
     }
@@ -179,6 +182,9 @@ MarkerClusterer.prototype.addMarker = function(marker) {
  */
 MarkerClusterer.prototype._createClusters = function(){
     var mapBounds = this._map.getBounds();
+    if (!mapBounds.getCenter()) {
+        return
+    }
     var extendedBounds = getExtendedBounds(this._map, mapBounds, this._gridSize);
     for(var i = 0, marker; marker = this._markers[i]; i++){
         if(!marker.isInCluster && extendedBounds.containsPoint(marker.getPosition()) ){ 
@@ -556,7 +562,7 @@ Cluster.prototype.updateClusterMarker = function () {
 
     var thatMap = this._map;
     var thatBounds = this.getBounds();
-    this._clusterMarker.addEventListener("click", function(event){
+    this._clusterMarker.addEventListener && this._clusterMarker.addEventListener("click", function(event){
         thatMap.setViewport(thatBounds);
     });
 
