@@ -20,14 +20,14 @@
    })(__commonjs_global, function() {
        var T,
        baidu = T = baidu || {version: "1.3.8"}; 
-       
+       var context = {}
        //提出guid，防止在与老版本Tangram混用时
-       //在下一行错误的修改window[undefined]
+       //在下一行错误的修改context[undefined]
        baidu.guid = "$BAIDU$";
 
        //Tangram可能被放在闭包中
-       //一些页面级别唯一的属性，需要挂载在window[baidu.guid]上
-       window[baidu.guid] = window[baidu.guid] || {};
+       //一些页面级别唯一的属性，需要挂载在context[baidu.guid]上
+       context[baidu.guid] = context[baidu.guid] || {};
 
        /**         
        * @ignore
@@ -484,7 +484,7 @@
 
        (function(){
            //不直接使用window，可以提高3倍左右性能
-           var guid = window[baidu.guid];
+           var guid = context[baidu.guid];
 
            baidu.lang.guid = function() {
                return "TANGRAM__" + (guid._counter ++).toString(36);
@@ -499,7 +499,7 @@
         * @meta standard
         */
 
-       window[baidu.guid]._instances = window[baidu.guid]._instances || {};
+       context[baidu.guid]._instances = context[baidu.guid]._instances || {};
 
        /**
         * 判断目标参数是否为function或Function实例
@@ -531,9 +531,9 @@
         */
        baidu.lang.Class = function(guid) {
            this.guid = guid || baidu.lang.guid();
-           window[baidu.guid]._instances[this.guid] = this;
+           context[baidu.guid]._instances[this.guid] = this;
        };
-       window[baidu.guid]._instances = window[baidu.guid]._instances || {};
+       context[baidu.guid]._instances = context[baidu.guid]._instances || {};
 
        /**
         * 释放对象所持有的资源，主要是自定义事件。
@@ -541,7 +541,7 @@
         * @grammar obj.dispose()
         */
        baidu.lang.Class.prototype.dispose = function(){
-           delete window[baidu.guid]._instances[this.guid];
+           delete context[baidu.guid]._instances[this.guid];
 
            for(var property in this){
                if (!baidu.lang.isFunction(this[property])) {
@@ -859,6 +859,9 @@
        *@return 无返回值。
        */
        TextIconOverlay.prototype._updateCss = function(){
+           if (!this._domElement) {
+               return
+           }
            var style = this.getStyleByText(this._text, this._styles);
            this._domElement.style.cssText = this._buildCssText(style);
        };
