@@ -1179,7 +1179,7 @@ var MarkerClusterer  = function(map, options){
     });
 
     this._map.addEventListener("moveend",function(){
-            that._redraw();     
+        that._redraw();     
     });
 
     var mkrs = opts["markers"];
@@ -1624,7 +1624,9 @@ Cluster.prototype.updateClusterMarker = function () {
  */
 Cluster.prototype.remove = function(){
     for (var i = 0, m; m = this._markers[i]; i++) {
-            this._markers[i].getMap() && this._map.removeOverlay(this._markers[i]);
+        var label = this._markers[i].getLabel();
+        this._markers[i].getMap() && this._map.removeOverlay(this._markers[i]);
+        this._markers[i].setLabel(label);
     }//清除散的标记点
     this._map.removeOverlay(this._clusterMarker);
     this._markers.length = 0;
