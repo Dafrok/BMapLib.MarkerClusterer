@@ -481,6 +481,13 @@ Cluster.prototype.addMarker = function(marker){
     marker.isInCluster = true;
     this._markers.push(marker);
 
+    var label = marker.getLabel()
+    if (label) {
+        marker._label = label
+    } else if (marker._label) {
+        marker.setLabel(marker._label)
+    }
+
     var len = this._markers.length;
     if(len < this._minClusterSize ){     
         this._map.addOverlay(marker);
