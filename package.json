@@ -1,6 +1,6 @@
 {
   "name": "bmaplib.markerclusterer",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "description": "A library of Baidu Map JS API",
   "main": "index.js",
   "scripts": {
