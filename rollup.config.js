@@ -9,7 +9,10 @@ export default {
   output: [
     {
       file: path.resolve(__dirname, './index.umd.js'),
-      format: 'umd'
+      format: 'umd',
+      globals: {
+        'bmaplib.texticonoverlay': 'BMapLib.TextIconOverlay'
+      }
     },
     {
       file: path.resolve(__dirname, './index.common.js'),
@@ -33,5 +36,6 @@ export default {
     replace({
       'process.env.NODE_ENV': "'production'"
     })
-  ]
+  ],
+  external: ['bmaplib.texticonoverlay']
 }
