@@ -2,7 +2,7 @@ import TextIconOverlay from 'bmaplib.texticonoverlay';
 
 /**
  * 获取一个扩展的视图范围，把上下左右都扩大一样的像素值。
- * @param {Map} map BMap.Map的实例化对象
+ * @param {BMap.Map} map BMap.Map的实例化对象
  * @param {BMap.Bounds} bounds BMap.Bounds的实例化对象
  * @param {Number} gridSize 要扩大的像素值
  *
@@ -91,13 +91,13 @@ var indexOf = function(item, source){
      * MarkerClusterer
      * @class 用来解决加载大量点要素到地图上产生覆盖现象的问题，并提高性能
      * @constructor
-     * @param {Map} map 地图的一个实例。
+     * @param {BMap.Map} map 地图的一个实例。
      * @param {Json Object} options 可选参数，可选项包括：<br />
      *    markers {Array<Marker>} 要聚合的标记数组<br />
      *    girdSize {Number} 聚合计算时网格的像素大小，默认60<br />
      *    maxZoom {Number} 最大的聚合级别，大于该级别就不进行相应的聚合<br />
      *    minClusterSize {Number} 最小的聚合数量，小于该数量的不能成为一个聚合，默认为2<br />
-     *    isAverangeCenter {Boolean} 聚合点的落脚位置是否是所有聚合在内点的平均值，默认为否，落脚在聚合内的第一个点<br />
+     *    isAverageCenter {Boolean} 聚合点的落脚位置是否是所有聚合在内点的平均值，默认为否，落脚在聚合内的第一个点<br />
      *    styles {Array<IconStyle>} 自定义聚合后的图标风格，请参考TextIconOverlay类<br />
      */
 var MarkerClusterer  = function(map, options){
@@ -410,7 +410,7 @@ MarkerClusterer.prototype.isAverageCenter = function() {
 
 /**
  * 获取聚合的Map实例。
- * @return {Map} Map的示例。
+ * @return {BMap.Map} Map的示例。
  */
 MarkerClusterer.prototype.getMap = function() {
     return this._map;
