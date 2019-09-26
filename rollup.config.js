@@ -8,7 +8,8 @@ export default {
   input: path.resolve(__dirname, './src/index.js'),
   output: [
     {
-      file: path.resolve(__dirname, './index.umd.js'),
+      file: path.resolve(__dirname, './index.js'),
+      name: 'BMapLib.MarkerClusterer',
       format: 'umd',
       globals: {
         'bmaplib.texticonoverlay': 'BMapLib.TextIconOverlay'
@@ -17,9 +18,12 @@ export default {
     {
       file: path.resolve(__dirname, './index.common.js'),
       format: 'cjs'
+    },
+    {
+      file: path.resolve(__dirname, './index.esm.js'),
+      format: 'esm'
     }
   ],
-  name: 'BMapLib.MarkerClusterer',
   plugins: [
     babel({
       exclude: '**',
