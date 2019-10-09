@@ -6,7 +6,8 @@
   "module": "index.esm.js",
   "scripts": {
     "build": "rollup -c",
-    "dev": "rollup -c -w"
+    "dev": "rollup -c -w",
+    "prepare": "npm run build"
   },
   "repository": {
     "type": "git",
