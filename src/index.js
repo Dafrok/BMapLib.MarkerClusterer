@@ -455,6 +455,10 @@ function Cluster(markerClusterer){
 
     this._clusterMarker = new TextIconOverlay(this._center, this._markers.length, {"styles":this._markerClusterer.getStyles()});
     //this._map.addOverlay(this._clusterMarker);
+    var that = this
+    this._clusterMarker.addEventListener && this._clusterMarker.addEventListener("click", function (event) {
+        that._map.setViewport(that.getBounds())
+    })
 }
 
 /**
@@ -563,13 +567,6 @@ Cluster.prototype.updateClusterMarker = function () {
     this._clusterMarker.setPosition(this._center);
     
     this._clusterMarker.setText(this._markers.length);
-
-    var thatMap = this._map;
-    var thatBounds = this.getBounds();
-    this._clusterMarker.addEventListener && this._clusterMarker.addEventListener("click", function(event){
-        thatMap.setViewport(thatBounds);
-    });
-
 };
 
 /**
