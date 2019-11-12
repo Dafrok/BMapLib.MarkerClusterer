@@ -437,6 +437,41 @@ MarkerClusterer.prototype.getClustersCount = function() {
 };
 
 /**
+ * 用于计算cluster的文本
+ * @param {Array<BMap.Marker>} markers cluster的markers
+ * @return {String}
+ */
+MarkerClusterer.prototype._textCalculator = function(markers){
+    return markers.length.toString();
+}
+
+/**
+ * 用于计算cluster的styles的索引
+ * @param {Array<BMap.Marker>} markers cluster的markers
+ * @param {Number} stylesLength styles的总长度
+ * @return {Number} styles的索引
+ */
+MarkerClusterer.prototype._stylesIndexCalculator = null;/* function(markers, stylesLength){
+    return -1;
+}*/
+
+/**
+ * 设置计算cluster的文本的计算函数
+ * @param {function(Array<BMap.Marker>)} calculator
+ */
+MarkerClusterer.prototype.setTextCalculator = function(calculator){
+    this._textCalculator = calculator
+}
+
+/**
+ * 设置计算cluster的styles的索引的计算函数
+ * @param {function(Array<BMap.Marker>, Number)} calculator
+ */
+MarkerClusterer.prototype.setStylesIndexCalculator = function(calculator){
+    this._stylesIndexCalculator = calculator
+}
+
+/**
  * @ignore
  * Cluster
  * @class 表示一个聚合对象，该聚合，包含有N个标记，这N个标记组成的范围，并有予以显示在Map上的TextIconOverlay等。
@@ -444,6 +479,7 @@ MarkerClusterer.prototype.getClustersCount = function() {
  * @param {MarkerClusterer} markerClusterer 一个标记聚合器示例。
  */
 function Cluster(markerClusterer){
+    var that = this;
     this._markerClusterer = markerClusterer;
     this._map = markerClusterer.getMap();
     this._minClusterSize = markerClusterer.getMinClusterSize();
@@ -454,11 +490,17 @@ function Cluster(markerClusterer){
     this._isReal = false; //真的是个聚合
 
     this._clusterMarker = new TextIconOverlay(this._center, this._markers.length, {"styles":this._markerClusterer.getStyles()});
+    this._clusterMarker.getStyleByText = function (text, styles) {
+        if (that._markerClusterer._stylesIndexCalculator) {
+            var index = that._markerClusterer._stylesIndexCalculator(that._markers, styles.length)
+            return styles[index];
+        }
+        return TextIconOverlay.prototype.getStyleByText.call(this, text, styles);
+    };
     //this._map.addOverlay(this._clusterMarker);
-    var that = this
     this._clusterMarker.addEventListener && this._clusterMarker.addEventListener("click", function (event) {
-        that._map.setViewport(that.getBounds())
-    })
+        that._map.setViewport(that.getBounds());
+    });
 }
 
 /**
@@ -566,7 +608,7 @@ Cluster.prototype.updateClusterMarker = function () {
 
     this._clusterMarker.setPosition(this._center);
     
-    this._clusterMarker.setText(this._markers.length);
+    this._clusterMarker.setText(this._markerClusterer._textCalculator(this._markers));
 };
 
 /**
