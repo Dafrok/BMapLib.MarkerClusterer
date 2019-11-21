@@ -87,19 +87,22 @@ var indexOf = function(item, source){
  *@exports MarkerClusterer as BMapLib.MarkerClusterer
  */
 
-    /**
-     * MarkerClusterer
-     * @class 用来解决加载大量点要素到地图上产生覆盖现象的问题，并提高性能
-     * @constructor
-     * @param {BMap.Map} map 地图的一个实例。
-     * @param {Json Object} options 可选参数，可选项包括：<br />
-     *    markers {Array<Marker>} 要聚合的标记数组<br />
-     *    girdSize {Number} 聚合计算时网格的像素大小，默认60<br />
-     *    maxZoom {Number} 最大的聚合级别，大于该级别就不进行相应的聚合<br />
-     *    minClusterSize {Number} 最小的聚合数量，小于该数量的不能成为一个聚合，默认为2<br />
-     *    isAverageCenter {Boolean} 聚合点的落脚位置是否是所有聚合在内点的平均值，默认为否，落脚在聚合内的第一个点<br />
-     *    styles {Array<IconStyle>} 自定义聚合后的图标风格，请参考TextIconOverlay类<br />
-     */
+/**
+ * MarkerClusterer
+ * @class 用来解决加载大量点要素到地图上产生覆盖现象的问题，并提高性能
+ * @constructor
+ * @param {BMap.Map} map 地图的一个实例。
+ * @param {MarkerClustererOptions=} options 可选参数
+ * 
+ * @typedef {object} MarkerClustererOptions
+ * @property {Marker[]=} markers 要聚合的标记数组
+ * @property {number=} [girdSize=60] 聚合计算时网格的像素大小，默认60
+ * @property {number=} maxZoom 最大的聚合级别，大于该级别就不进行相应的聚合
+ * @property {number=} [minClusterSize=2] 最小的聚合数量，小于该数量的不能成为一个聚合，默认为2
+ * @property {boolean=} [isAverageCenter=false] 聚合点的落脚位置是否是所有聚合在内点的平均值，默认为否，落脚在聚合内的第一个点
+ * @property {IconStyle[]=} styles 自定义聚合后的图标风格，请参考TextIconOverlay类
+ * @property {number=} zIndex 聚合图标的z-index
+ */
 var MarkerClusterer  = function(map, options){
     try {
         BMap;
@@ -114,6 +117,7 @@ var MarkerClusterer  = function(map, options){
     this._clusters = [];
     
     var opts = options || {};
+    this._zIndex = opts["zIndex"];
     this._gridSize = opts["gridSize"] || 60;
     this._maxZoom = opts["maxZoom"] || 18;
     this._minClusterSize = opts["minClusterSize"] || 2;           
@@ -365,6 +369,25 @@ MarkerClusterer.prototype.setMaxZoom = function(maxZoom) {
 };
 
 /**
+ * 获取聚合图标的z-index
+ * @return {number | undefined}
+ */
+MarkerClusterer.prototype.getZIndex = function () {
+    return this._zIndex;
+}
+
+/**
+ * 设置聚合图标的z-index
+ * @param {number} zIndex
+ */
+MarkerClusterer.prototype.setZIndex = function (zIndex) {
+    if (this._zIndex != zIndex) {
+        this.zIndex = zIndex;
+        this._redraw();
+    }
+}
+
+/**
  * 获取聚合的样式风格集合
  * @return {Array<IconStyle>} 聚合的样式风格集合
  */
@@ -489,7 +512,10 @@ function Cluster(markerClusterer){
     this._gridBounds = null;//以中心点为准，向四边扩大gridSize个像素的范围，也即网格范围
     this._isReal = false; //真的是个聚合
 
-    this._clusterMarker = new TextIconOverlay(this._center, this._markers.length, {"styles":this._markerClusterer.getStyles()});
+    this._clusterMarker = new TextIconOverlay(this._center, this._markers.length, {
+        "styles": this._markerClusterer.getStyles(),
+        zIndex: markerClusterer._zIndex
+    });
     this._clusterMarker.getStyleByText = function (text, styles) {
         if (that._markerClusterer._stylesIndexCalculator) {
             var index = that._markerClusterer._stylesIndexCalculator(that._markers, styles.length)
